@@ -1,5 +1,5 @@
 "use client"
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Calendar, Home, Inbox, PanelRightCloseIcon, PanelRightOpenIcon, Search, Settings } from "lucide-react"
 
 import {
   Sidebar,
@@ -70,7 +70,6 @@ export function AppSidebar() {
 import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
 import { useSidebar } from "../ui/sidebar"
-import { PanelLeftIcon } from "lucide-react"
 
 export function SidebarTrigger({
   className,
@@ -78,7 +77,19 @@ export function SidebarTrigger({
   children,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar,state } = useSidebar()
+  
+  let sidebarStatusText;
+  let sidebarStatusIcon;
+  if (state === "expanded") {
+    sidebarStatusText = "Open";
+    sidebarStatusIcon = <PanelRightOpenIcon></PanelRightOpenIcon>
+  } else {
+    sidebarStatusText = "Closed";
+    sidebarStatusIcon = <PanelRightCloseIcon></PanelRightCloseIcon>
+  }
+  
+  
 
   return (
     <Button
@@ -93,11 +104,9 @@ export function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeftIcon />
+      {sidebarStatusIcon}
       <span className="sr-only">Toggle Sidebar</span>
-      <span>
-        Hello world
-      </span>
+      <span>{sidebarStatusText} Sidebar</span>
     </Button>
   )
 }
