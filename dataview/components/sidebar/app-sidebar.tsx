@@ -86,7 +86,7 @@ export function SidebarTrigger({
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon"
-      className={cn("h-7 w-auto ml-5 p-2", className)}
+      className={cn("h-7 w-auto ml-5 mt-2 p-1", className)}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
