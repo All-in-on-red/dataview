@@ -4,11 +4,11 @@ import { AppSidebar } from "@/components/sidebar/app-sidebar"
 
 export default function Home() {
   return (
-  <SidebarProvider>
-    <AppSidebar />
-    <main>
-      <SidebarTrigger />
-    </main>
-  </SidebarProvider>
+    <div>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarTrigger></SidebarTrigger>
+      </SidebarProvider>
+    </div>
   )
 }
