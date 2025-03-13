@@ -15,11 +15,6 @@ import {
 // Menu items.
 const items = [
   {
-    title: "Add file",
-    url: "#",
-    icon: Upload,
-  },
-  {
     title: "Home",
     url: "#",
     icon: Home,
@@ -54,6 +49,14 @@ export function AppSidebar() {
           <SidebarGroupLabel>Tools</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem key="Add File">
+                <SidebarMenuButton asChild>
+                    <a href="#">
+                        <Upload/>
+                        <span>Add File</span>
+                    </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               {items.map((item) => (
                       <SidebarMenuItem key={item.title}>
                           <SidebarMenuButton asChild>
