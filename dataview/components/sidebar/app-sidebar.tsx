@@ -1,5 +1,5 @@
 "use client"
-import { Calendar, Home, Inbox, PanelRightCloseIcon, PanelRightOpenIcon, Search, Settings } from "lucide-react"
+import { Calendar, Upload, Home, Inbox, PanelRightCloseIcon, PanelRightOpenIcon, Plus, Search, Settings } from "lucide-react"
 
 import {
   Sidebar,
@@ -14,6 +14,11 @@ import {
 
 // Menu items.
 const items = [
+  {
+    title: "Add file",
+    url: "#",
+    icon: Upload,
+  },
   {
     title: "Home",
     url: "#",
