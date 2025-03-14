@@ -1,10 +1,9 @@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSubButton } from "../ui/sidebar";
-import { ChevronRight, File, Upload } from "lucide-react";
+import { ChevronRight, File, Search, Upload } from "lucide-react";
 import React from "react";
 import { Input } from "../ui/input";
 import { Label } from "@radix-ui/react-label";
-
 
 function LoadedFiles(){
     const [isOpen, setIsOpen] = React.useState(false)
@@ -60,6 +59,36 @@ function AddFileButton() {
     </SidebarMenuItem>)
 }
 
+function FileBrowser(){
+    const [isOpen, setIsOpen] = React.useState(true)
+    return (
+        <SidebarMenuItem>
+            <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row"
+                }}>
+                    <SidebarMenuButton style={{ width: "87%" }}>
+                        <Search />
+                        Open Folder
+                    </SidebarMenuButton>
+                    <CollapsibleTrigger asChild>
+                        <SidebarMenuButton style={{ width: "13%", margin: "0" }}>
+                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                </div>
+                <CollapsibleContent>
+                    <SidebarMenuSubButton>
+                        {File && <File />}
+                        <span>Hello world</span>
+                    </SidebarMenuSubButton>
+                </CollapsibleContent>
+            </Collapsible>
+        </SidebarMenuItem>
+    )
+}
+
 
 export function FilesSection(){
     return (
@@ -67,8 +96,9 @@ export function FilesSection(){
             <SidebarGroupLabel>Files</SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
-                    {AddFileButton()}
-                    {LoadedFiles()}
+                    <AddFileButton/>
+                    <LoadedFiles/>
+                    <FileBrowser/>
                 </SidebarMenu>
             </SidebarGroupContent>
         </SidebarGroup>
