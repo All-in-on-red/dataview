@@ -1,7 +1,12 @@
 "use client"
 import { Calendar, Upload,File, Home, Inbox, PanelRightCloseIcon, PanelRightOpenIcon, ChevronRight, Search, Settings } from "lucide-react"
-import React from "react";
-
+import React, { useRef } from "react";
+import { cn } from "@/lib/utils"
+import { Button } from "../ui/button"
+import { useSidebar } from "../ui/sidebar"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible"
+import { Input } from "../ui/input";
+import { Label } from "@radix-ui/react-label";
 import {
   Sidebar,
   SidebarContent,
@@ -42,6 +47,46 @@ const items = [
     icon: Settings,
   },
 ]
+
+export function SidebarTrigger({
+  className,
+  onClick,
+  children,
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { toggleSidebar,state } = useSidebar()
+  
+  let sidebarStatusText;
+  let sidebarStatusIcon;
+  if (state === "expanded") {
+    sidebarStatusText = "Open";
+    sidebarStatusIcon = <PanelRightOpenIcon></PanelRightOpenIcon>
+  } else {
+    sidebarStatusText = "Closed";
+    sidebarStatusIcon = <PanelRightCloseIcon></PanelRightCloseIcon>
+  }
+  
+  
+
+  return (
+    <Button
+      data-sidebar="trigger"
+      data-slot="sidebar-trigger"
+      variant="ghost"
+      size="icon"
+      className={cn("h-7 w-auto ml-5 mt-2 p-1", className)}
+      onClick={(event) => {
+        onClick?.(event)
+        toggleSidebar()
+      }}
+      {...props}
+    >
+      {sidebarStatusIcon}
+      <span className="sr-only">Toggle Sidebar</span>
+      <span>{sidebarStatusText} Sidebar</span>
+    </Button>
+  )
+}
 
 export function AppSidebar() {
   const [isOpen, setIsOpen] = React.useState(false)
@@ -103,50 +148,5 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
-}
-
-import { cn } from "@/lib/utils"
-import { Button } from "../ui/button"
-import { useSidebar } from "../ui/sidebar"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible"
-
-export function SidebarTrigger({
-  className,
-  onClick,
-  children,
-  ...props
-}: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar,state } = useSidebar()
-  
-  let sidebarStatusText;
-  let sidebarStatusIcon;
-  if (state === "expanded") {
-    sidebarStatusText = "Open";
-    sidebarStatusIcon = <PanelRightOpenIcon></PanelRightOpenIcon>
-  } else {
-    sidebarStatusText = "Closed";
-    sidebarStatusIcon = <PanelRightCloseIcon></PanelRightCloseIcon>
-  }
-  
-  
-
-  return (
-    <Button
-      data-sidebar="trigger"
-      data-slot="sidebar-trigger"
-      variant="ghost"
-      size="icon"
-      className={cn("h-7 w-auto ml-5 mt-2 p-1", className)}
-      onClick={(event) => {
-        onClick?.(event)
-        toggleSidebar()
-      }}
-      {...props}
-    >
-      {sidebarStatusIcon}
-      <span className="sr-only">Toggle Sidebar</span>
-      <span>{sidebarStatusText} Sidebar</span>
-    </Button>
   )
 }
