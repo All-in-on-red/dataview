@@ -1,10 +1,8 @@
 "use client"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
-import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSubButton, SidebarRail } from "../ui/sidebar";
+import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSubButton} from "../ui/sidebar";
 import { ChevronRight, File, Folder, FolderClosed, Search, Upload } from "lucide-react";
 import React from "react";
-import { Input } from "../ui/input";
-import { Label } from "@radix-ui/react-label";
 import { Separator } from "@/components/ui/separator"
 
 function LoadedFiles(){
