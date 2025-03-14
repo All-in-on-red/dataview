@@ -1,18 +1,41 @@
 "use client"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSubButton, SidebarRail } from "../ui/sidebar";
-import { ChevronRight, File, Folder, Search, Upload } from "lucide-react";
+import { ChevronRight, File, Folder, FolderClosed, Search, Upload } from "lucide-react";
 import React from "react";
 import { Input } from "../ui/input";
 import { Label } from "@radix-ui/react-label";
 
 function LoadedFiles(){
-    const [isOpen, setIsOpen] = React.useState(false)
+    const [isOpen, setIsOpen] = React.useState(true)
+    const [csvFiles, setCsvFiles] = React.useState<{ [key: string]: string }>({});
+
+    // Load CSV files from localStorage on mount
+    React.useEffect(() => {
+        const handleStorageUpdate = () => {
+            const storedFiles = sessionStorage.getItem('csvFiles');
+            if (storedFiles) {
+                setCsvFiles(JSON.parse(storedFiles));
+            }
+        };
+
+        handleStorageUpdate() // Call once to load files already in session storage
+        // Add event listener for custom event
+        window.addEventListener('sessionStorageUpdated', handleStorageUpdate);
+
+        // Cleanup event listener on component unmount
+        return () => {
+            window.removeEventListener('sessionStorageUpdated', handleStorageUpdate);
+        };
+            
+    }, []);
+    
     return ( 
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/collapsible group-data-[collapsible=icon]:hidden">
         <CollapsibleTrigger asChild>
             <SidebarMenuItem>
                 <SidebarMenuButton tooltip="Files">
+                    <FolderClosed/>
                     <span>Loaded Files</span>
                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
@@ -21,10 +44,16 @@ function LoadedFiles(){
         <CollapsibleContent>
             <SidebarMenuItem>
                 {/*  add more of this for files*/}
-                <SidebarMenuSubButton>
-                    {File && <File />}
-                    <span>Hello world</span>
-                </SidebarMenuSubButton>
+                {
+                    Object.entries(csvFiles).map(([key,value]) => {
+                        return (
+                            <SidebarMenuSubButton key={key}>
+                                <File />
+                                <span>{key}</span>
+                            </SidebarMenuSubButton>
+                        )
+                    })
+                }
             </SidebarMenuItem>
         </CollapsibleContent>
     </Collapsible> 
@@ -154,6 +183,10 @@ function FileBrowser(){
             sessionStorage.setItem('csvFiles', JSON.stringify(updatedFiles)); // Save to localStorage
             return updatedFiles;
         });
+        
+        // Dispatch custom event
+        const event = new Event('sessionStorageUpdated');
+        window.dispatchEvent(event);
     };
 
     // Function to delete a specific file
