@@ -1,6 +1,6 @@
 "use client"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
-import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSubButton } from "../ui/sidebar";
+import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSubButton, SidebarRail } from "../ui/sidebar";
 import { ChevronRight, File, Folder, Search, Upload } from "lucide-react";
 import React from "react";
 import { Input } from "../ui/input";
@@ -103,6 +103,7 @@ function FileBrowser(){
                     <SidebarMenuButton>
                         <Folder />
                         {folder.name} 
+                        <ChevronRight className={`ml-auto transition-transform duration-200 ${open ? 'rotate-90' : ''}` } />
                     </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="pl-4">
@@ -128,7 +129,7 @@ function FileBrowser(){
 
     return (
         <SidebarMenuItem>
-            <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+            <Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/collapsible">
                 <div style={{
                     display: "flex",
                     flexDirection: "row"

@@ -13,7 +13,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSubButton,
 } from "@/components/ui/sidebar"
 import { FilesSection } from "./filenav";
 
