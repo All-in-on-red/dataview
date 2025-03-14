@@ -5,6 +5,7 @@ import { ChevronRight, File, Folder, FolderClosed, Search, Upload } from "lucide
 import React from "react";
 import { Input } from "../ui/input";
 import { Label } from "@radix-ui/react-label";
+import { Separator } from "@/components/ui/separator"
 
 function LoadedFiles(){
     const [isOpen, setIsOpen] = React.useState(true)
@@ -182,25 +183,15 @@ function FileBrowser(){
 
     return (
         <SidebarMenuItem>
-            <Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/collapsible">
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row"
-                }}>
-                    <SidebarMenuButton style={{ width: "87%" }} onClick={chooseFolder}>
-                        <Search />
-                        Open Folder
-                    </SidebarMenuButton>
-                    <CollapsibleTrigger asChild>
-                        <SidebarMenuButton style={{ width: "13%", margin: "0" }}>
-                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                        </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                </div>
-                <CollapsibleContent>
-                    {folderHandle && (<FolderTree folder={folderHandle} addCSVFile={addCSVFile}/>)}
-                </CollapsibleContent>
-            </Collapsible>
+            <div>
+                <Separator/>
+                <SidebarMenuButton onClick={chooseFolder}>
+                    <Search />
+                    Open Folder
+                </SidebarMenuButton>
+                <Separator/>
+                {folderHandle && (<FolderTree folder={folderHandle} addCSVFile={addCSVFile}/>)}
+            </div>
         </SidebarMenuItem>
     )
 }
@@ -212,6 +203,7 @@ export function FilesSection(){
             <SidebarGroupContent>
                 <SidebarMenu>
                     <LoadedFiles/>
+                    <Separator className="invisible"/>
                     <FileBrowser/>
                 </SidebarMenu>
             </SidebarGroupContent>
