@@ -60,9 +60,111 @@ function AddFileButton() {
     </SidebarMenuItem>)
 }
 
+
+function FolderTree(
+    { folder, addCSVFile, }: { folder: FileSystemDirectoryHandle; addCSVFile: (file: { name: string; content: string }) => void; 
+}) {
+    const [entries, setEntries] = React.useState<FileSystemHandle[]>([]);
+    const [open, setOpen] = React.useState(false);
+
+    const handleLoadCSV = async (fileHandle: FileSystemFileHandle) => {
+        try {
+            const file = await fileHandle.getFile();
+            const text = await file.text();
+            addCSVFile({ name: file.name, content: text }); // Adds or updates without duplicates
+        } catch (error) {
+            console.error('Error loading CSV:', error);
+        }
+    };
+
+    // When the collapsible is open, load its entries (CSV files and directories)
+    React.useEffect(() => {
+        if (open) {
+            const loadEntries = async () => {
+                const newEntries: FileSystemHandle[] = [];
+                for await (const entry of folder.values()) {
+                    // Only include CSV files and directories
+                    if (entry.kind === 'file' && entry.name.toLowerCase().endsWith('.csv')) {
+                        newEntries.push(entry);
+                    } else if (entry.kind === 'directory') {
+                        newEntries.push(entry);
+                    }
+                }
+                setEntries(newEntries);
+            };
+            loadEntries();
+        }
+    }, [open, folder]);
+
+    return (
+        <Collapsible open={open} onOpenChange={setOpen}>
+            <CollapsibleTrigger asChild>
+                <SidebarMenuButton>
+                    <Folder />
+                    {folder.name}
+                    <ChevronRight className={`ml-auto transition-transform duration-200 ${open ? 'rotate-90' : ''}`} />
+                </SidebarMenuButton>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pl-4">
+                {entries.map((entry) => {
+                    if (entry.kind === 'file') {
+                        // For CSV files, use an anchor tag as a placeholder
+                        return (
+                            <SidebarMenuButton
+                                key={entry.name}
+                                onMouseUp={(e) => e.stopPropagation()}
+                                onMouseDown={(e) => e.stopPropagation()}
+                                onClick={(event) => {
+                                    event.stopPropagation(); // Prevent the click from bubbling up
+                                    handleLoadCSV(entry as FileSystemHandle);
+                                }}
+                            >
+                                <File />
+                                {entry.name}
+                            </SidebarMenuButton>
+                        );
+                    } else if (entry.kind === 'directory') {
+                        // Recursively render child folders
+                        return <FolderTree folder={entry} key={entry.name} />
+                    }
+                    return null;
+                })}
+            </CollapsibleContent>
+        </Collapsible>
+    );
+}
+
 function FileBrowser(){
     const [isOpen, setIsOpen] = React.useState(true)
     const [folderHandle, setFolderHandle] = React.useState<FileSystemDirectoryHandle | null>(null);
+    const [csvFiles, setCsvFiles] = React.useState<{ [key: string]: string }>({});
+
+    // Load CSV files from localStorage on mount
+    React.useEffect(() => {
+        const storedFiles = sessionStorage.getItem('csvFiles');
+        if (storedFiles) {
+            setCsvFiles(JSON.parse(storedFiles));
+        }
+    }, []);
+
+    // Function to add/update CSV files (ensures uniqueness)
+    const addCSVFile = (file: { name: string; content: string }) => {
+        setCsvFiles((prevFiles) => {
+            const updatedFiles = { ...prevFiles, [file.name]: file.content };
+            sessionStorage.setItem('csvFiles', JSON.stringify(updatedFiles)); // Save to localStorage
+            return updatedFiles;
+        });
+    };
+
+    // Function to delete a specific file
+    const removeCSVFile = (fileName: string) => {
+        setCsvFiles((prevFiles) => {
+            const updatedFiles = { ...prevFiles };
+            delete updatedFiles[fileName]; // Remove from object
+            sessionStorage.setItem('csvFiles', JSON.stringify(updatedFiles)); // Update localStorage
+            return updatedFiles;
+        });
+    };
     
     async function chooseFolder() {
         try {
@@ -74,58 +176,6 @@ function FileBrowser(){
         }
     }
     
-    function FolderTree({ folder }: { folder: FileSystemDirectoryHandle }) {
-        const [entries, setEntries] = React.useState<FileSystemHandle[]>([]);
-        const [open, setOpen] = React.useState(false);
-
-        // When the collapsible is open, load its entries (CSV files and directories)
-        React.useEffect(() => {
-            if (open) {
-                const loadEntries = async () => {
-                    const newEntries: FileSystemHandle[] = [];
-                    for await (const entry of folder.values()) {
-                        // Only include CSV files and directories
-                        if (entry.kind === 'file' && entry.name.toLowerCase().endsWith('.csv')) {
-                            newEntries.push(entry);
-                        } else if (entry.kind === 'directory') {
-                            newEntries.push(entry);
-                        }
-                    }
-                    setEntries(newEntries);
-                };
-                loadEntries();
-            }
-        }, [open, folder]);
-
-        return (
-            <Collapsible open={open} onOpenChange={setOpen}>
-                <CollapsibleTrigger asChild>
-                    <SidebarMenuButton>
-                        <Folder />
-                        {folder.name} 
-                        <ChevronRight className={`ml-auto transition-transform duration-200 ${open ? 'rotate-90' : ''}` } />
-                    </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent className="pl-4">
-                    {entries.map((entry) => {
-                        if (entry.kind === 'file') {
-                            // For CSV files, use an anchor tag as a placeholder
-                            return (
-                                <SidebarMenuButton key={entry.name}>
-                                    <File />
-                                    {entry.name} 
-                                </SidebarMenuButton>
-                            );
-                        } else if (entry.kind === 'directory') {
-                            // Recursively render child folders
-                            return <FolderTree folder={entry} key={entry.name} />
-                        }
-                        return null;
-                    })}
-                </CollapsibleContent>
-            </Collapsible>
-        );
-  }
 
     return (
         <SidebarMenuItem>
@@ -145,7 +195,7 @@ function FileBrowser(){
                     </CollapsibleTrigger>
                 </div>
                 <CollapsibleContent>
-                    {folderHandle && (<FolderTree folder={folderHandle} />)}
+                    {folderHandle && (<FolderTree folder={folderHandle} addCSVFile={addCSVFile}/>)}
                 </CollapsibleContent>
             </Collapsible>
         </SidebarMenuItem>
