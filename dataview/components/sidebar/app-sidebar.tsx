@@ -1,12 +1,9 @@
 "use client"
-import { Calendar, Upload,File, Home, Inbox, PanelRightCloseIcon, PanelRightOpenIcon, ChevronRight, Search, Settings } from "lucide-react"
-import React, { useRef } from "react";
+import { Calendar, Home, Inbox, PanelRightCloseIcon, PanelRightOpenIcon, Search, Settings } from "lucide-react"
+import React from "react";
 import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
 import { useSidebar } from "../ui/sidebar"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible"
-import { Input } from "../ui/input";
-import { Label } from "@radix-ui/react-label";
 import {
   Sidebar,
   SidebarContent,
@@ -18,6 +15,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSubButton,
 } from "@/components/ui/sidebar"
+import { FilesSection } from "./filenav";
 
 // Menu items.
 const items = [
@@ -89,46 +87,10 @@ export function SidebarTrigger({
 }
 
 export function AppSidebar() {
-  const [isOpen, setIsOpen] = React.useState(false)
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Files</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-
-              <SidebarMenuItem key="Add File">
-                <SidebarMenuButton asChild>
-                    <a href="#">
-                        <Upload/>
-                        <span>Add File</span>
-                    </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/collapsible group-data-[collapsible=icon]:hidden">
-                <CollapsibleTrigger asChild>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Files">
-                      <span>Files</span>
-                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuItem>
-                    <SidebarMenuSubButton>
-                        {File && <File/>}
-                        <span>Hello world</span>
-                    </SidebarMenuSubButton>
-                  </SidebarMenuItem>
-                </CollapsibleContent>
-              </Collapsible>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
+        <FilesSection/>
         <SidebarGroup>
           <SidebarGroupLabel>Tools</SidebarGroupLabel>
           <SidebarGroupContent>
