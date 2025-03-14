@@ -1,6 +1,7 @@
+"use client"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSubButton } from "../ui/sidebar";
-import { ChevronRight, File, Search, Upload } from "lucide-react";
+import { ChevronRight, File, Folder, Search, Upload } from "lucide-react";
 import React from "react";
 import { Input } from "../ui/input";
 import { Label } from "@radix-ui/react-label";
@@ -61,6 +62,70 @@ function AddFileButton() {
 
 function FileBrowser(){
     const [isOpen, setIsOpen] = React.useState(true)
+    const [folderHandle, setFolderHandle] = React.useState<FileSystemDirectoryHandle | null>(null);
+    
+    async function chooseFolder() {
+        try {
+            const dirHandle = await window.showDirectoryPicker();
+            setFolderHandle(dirHandle);
+            // If you need persistent storage, consider using IndexedDB here.
+        } catch (error) {
+            console.error('Folder selection cancelled or failed:', error);
+        }
+    }
+    
+    function FolderTree({ folder }: { folder: FileSystemDirectoryHandle }) {
+        const [entries, setEntries] = React.useState<FileSystemHandle[]>([]);
+        const [open, setOpen] = React.useState(false);
+
+        // When the collapsible is open, load its entries (CSV files and directories)
+        React.useEffect(() => {
+            if (open) {
+                const loadEntries = async () => {
+                    const newEntries: FileSystemHandle[] = [];
+                    for await (const entry of folder.values()) {
+                        // Only include CSV files and directories
+                        if (entry.kind === 'file' && entry.name.toLowerCase().endsWith('.csv')) {
+                            newEntries.push(entry);
+                        } else if (entry.kind === 'directory') {
+                            newEntries.push(entry);
+                        }
+                    }
+                    setEntries(newEntries);
+                };
+                loadEntries();
+            }
+        }, [open, folder]);
+
+        return (
+            <Collapsible open={open} onOpenChange={setOpen}>
+                <CollapsibleTrigger asChild>
+                    <SidebarMenuButton>
+                        <Folder />
+                        {folder.name} 
+                    </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pl-4">
+                    {entries.map((entry) => {
+                        if (entry.kind === 'file') {
+                            // For CSV files, use an anchor tag as a placeholder
+                            return (
+                                <SidebarMenuButton>
+                                    <File />
+                                    {entry.name} 
+                                </SidebarMenuButton>
+                            );
+                        } else if (entry.kind === 'directory') {
+                            // Recursively render child folders
+                            return <FolderTree folder={entry} key={entry.name} />
+                        }
+                        return null;
+                    })}
+                </CollapsibleContent>
+            </Collapsible>
+        );
+  }
+
     return (
         <SidebarMenuItem>
             <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -68,7 +133,7 @@ function FileBrowser(){
                     display: "flex",
                     flexDirection: "row"
                 }}>
-                    <SidebarMenuButton style={{ width: "87%" }}>
+                    <SidebarMenuButton style={{ width: "87%" }} onClick={chooseFolder}>
                         <Search />
                         Open Folder
                     </SidebarMenuButton>
@@ -79,16 +144,12 @@ function FileBrowser(){
                     </CollapsibleTrigger>
                 </div>
                 <CollapsibleContent>
-                    <SidebarMenuSubButton>
-                        {File && <File />}
-                        <span>Hello world</span>
-                    </SidebarMenuSubButton>
+                    {folderHandle && (<FolderTree folder={folderHandle} />)}
                 </CollapsibleContent>
             </Collapsible>
         </SidebarMenuItem>
     )
 }
-
 
 export function FilesSection(){
     return (
