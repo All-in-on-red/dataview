@@ -62,8 +62,10 @@ function LoadedFiles(){
 }
 
 function FolderTree(
-    { folder, addCSVFile, }: { folder: FileSystemDirectoryHandle; addCSVFile: (file: { name: string; content: string }) => void; 
-}) {
+    { folder, addCSVFile, className=""}: { 
+        folder: FileSystemDirectoryHandle;
+        addCSVFile: (file: { name: string; content: string }) => void;
+        className?:String}) {
     const [entries, setEntries] = React.useState<FileSystemHandle[]>([]);
     const [open, setOpen] = React.useState(false);
 
@@ -97,7 +99,7 @@ function FolderTree(
     }, [open, folder]);
 
     return (
-        <Collapsible open={open} onOpenChange={setOpen}>
+        <Collapsible open={open} onOpenChange={setOpen} className={className}>
             <CollapsibleTrigger asChild>
                 <SidebarMenuButton>
                     <Folder />
@@ -114,6 +116,7 @@ function FolderTree(
                                 key={entry.name}
                                 onMouseUp={(e) => e.stopPropagation()}
                                 onMouseDown={(e) => e.stopPropagation()}
+                                className="group/collapsible group-data-[collapsible=icon]:hidden"
                                 onClick={(event) => {
                                     event.stopPropagation(); // Prevent the click from bubbling up
                                     handleLoadCSV(entry as FileSystemHandle);
@@ -125,7 +128,7 @@ function FolderTree(
                         );
                     } else if (entry.kind === 'directory') {
                         // Recursively render child folders
-                        return <FolderTree folder={entry} key={entry.name} />
+                        return <FolderTree folder={entry} key={entry.name} className={ "group/collapsible group-data-[collapsible=icon]:hidden" }/>
                     }
                     return null;
                 })}
