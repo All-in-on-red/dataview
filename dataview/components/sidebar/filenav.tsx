@@ -111,7 +111,7 @@ function FileBrowser(){
                         if (entry.kind === 'file') {
                             // For CSV files, use an anchor tag as a placeholder
                             return (
-                                <SidebarMenuButton>
+                                <SidebarMenuButton key={entry.name}>
                                     <File />
                                     {entry.name} 
                                 </SidebarMenuButton>
