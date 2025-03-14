@@ -60,36 +60,6 @@ function LoadedFiles(){
     )
 }
 
-function AddFileButton() {
-    function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const files = event.target.files;
-        if (files && files.length > 0) {
-            const file = files[0]; // Only process the first file (can be adjusted)
-
-            // Read file content
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                console.log("File Content:", e.target?.result); // Do something with the file content
-            };
-            reader.readAsText(file); // Reads as text (for CSVs)
-
-            // Clear the input field after reading the file
-            event.target.value = "";
-        }
-    }
-
-    return (<SidebarMenuItem key="Add File">
-        <SidebarMenuButton asChild type="submit">
-            <Label htmlFor="files">
-                <Upload />
-                <span>Add File</span>
-            </Label>
-        </SidebarMenuButton>
-        <Input className="hidden" id="files" type="file" accept=".csv" onChange={handleFileChange} multiple></Input>
-    </SidebarMenuItem>)
-}
-
-
 function FolderTree(
     { folder, addCSVFile, }: { folder: FileSystemDirectoryHandle; addCSVFile: (file: { name: string; content: string }) => void; 
 }) {
@@ -241,7 +211,6 @@ export function FilesSection(){
             <SidebarGroupLabel>Files</SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
-                    <AddFileButton/>
                     <LoadedFiles/>
                     <FileBrowser/>
                 </SidebarMenu>
