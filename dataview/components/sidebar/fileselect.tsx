@@ -1,10 +1,10 @@
 import { create } from 'zustand'
 
-interface SelectedFile{
+export interface SelectedFile{
     file: string
     set: (key: string) => void
 }
-const useSelectedFile = create<SelectedFile>((set) => ({
+export const useSelectedFile = create<SelectedFile>((set) => ({
     file: "",
-    set: (key) => set((state) => ({file:state.file}))
+    set: (key) => set((state) => ({file:key}))
 }))
