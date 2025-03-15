@@ -8,7 +8,7 @@ import { useSelectedFile } from "./fileselect";
 
 function LoadedFiles(){
     const [isOpen, setIsOpen] = React.useState(true)
-    const [csvFiles, setCsvFiles] = React.useState<{ [key: string]: string }>({});
+    const [csvFiles, setCsvFiles] = React.useState<{ [key: string]: { name: string, content: string } }>({});
     //zustand
     const { file,set } = useSelectedFile()
 
@@ -56,7 +56,7 @@ function LoadedFiles(){
                         return (
                             <SidebarMenuSubButton className={key===file ? "border-4 border-solid" : ""} key={key} onClick={()=>clickHandler(key)}>
                                 <File />
-                                <span>{key}</span>
+                                <span>{value.name}</span>
                             </SidebarMenuSubButton>
                         )
                     })
@@ -68,18 +68,22 @@ function LoadedFiles(){
 }
 
 function FolderTree(
-    { folder, addCSVFile, className=""}: { 
+    { folder, addCSVFile, path = "" , className=""}: { 
         folder: FileSystemDirectoryHandle;
-        addCSVFile: (file: { name: string; content: string }) => void;
+        addCSVFile: (file: { path: string; name: string; content: string  }) => void;
+        path:string;
         className?:String}) {
     const [entries, setEntries] = React.useState<FileSystemHandle[]>([]);
     const [open, setOpen] = React.useState(false);
+
+    const currentPath = path === "" ? `/${folder.name}` : `${path}/${folder.name}`
 
     const handleLoadCSV = async (fileHandle: FileSystemFileHandle) => {
         try {
             const file = await fileHandle.getFile();
             const text = await file.text();
-            addCSVFile({ name: file.name, content: text }); // Adds or updates without duplicates
+            const fullPath = `${currentPath}/${file.name}`;
+            addCSVFile({path:fullPath, name: file.name, content: text }); // Adds or updates without duplicates
         } catch (error) {
             console.error('Error loading CSV:', error);
         }
@@ -134,7 +138,7 @@ function FolderTree(
                         );
                     } else if (entry.kind === 'directory') {
                         // Recursively render child folders
-                        return <FolderTree folder={entry} key={entry.name} addCSVFile={addCSVFile} className={ "group/collapsible group-data-[collapsible=icon]:hidden" }/>
+                        return <FolderTree folder={entry} key={entry.name} path={currentPath} addCSVFile={addCSVFile} className={ "group/collapsible group-data-[collapsible=icon]:hidden" }/>
                     }
                     return null;
                 })}
@@ -145,7 +149,7 @@ function FolderTree(
 
 function FileBrowser(){
     const [folderHandle, setFolderHandle] = React.useState<FileSystemDirectoryHandle | null>(null);
-    const [csvFiles, setCsvFiles] = React.useState<{ [key: string]: string }>({});
+    const [csvFiles, setCsvFiles] = React.useState<{ [key: string]: { name: string, content: string } }>({});
 
     // Load CSV files from localStorage on mount
     React.useEffect(() => {
@@ -156,9 +160,9 @@ function FileBrowser(){
     }, []);
 
     // Function to add/update CSV files (ensures uniqueness)
-    const addCSVFile = (file: { name: string; content: string }) => {
+    const addCSVFile = (file: {path:string; name: string; content: string }) => {
         setCsvFiles((prevFiles) => {
-            const updatedFiles = { ...prevFiles, [file.name]: file.content };
+            const updatedFiles = { ...prevFiles, [file.path]: { name: file.name, content: file.content}};
             sessionStorage.setItem('csvFiles', JSON.stringify(updatedFiles)); // Save to localStorage
             return updatedFiles;
         });
@@ -169,11 +173,11 @@ function FileBrowser(){
     };
 
     // Function to delete a specific file
-    const removeCSVFile = (fileName: string) => {
+    const removeCSVFile = (filePath: string) => {
         setCsvFiles((prevFiles) => {
             const updatedFiles = { ...prevFiles };
-            delete updatedFiles[fileName]; // Remove from object
-            sessionStorage.setItem('csvFiles', JSON.stringify(updatedFiles)); // Update localStorage
+            delete updatedFiles[filePath];
+            sessionStorage.setItem('csvFiles', JSON.stringify(updatedFiles));
             return updatedFiles;
         });
     };
