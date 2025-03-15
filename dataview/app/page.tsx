@@ -1,13 +1,17 @@
 // side bar
-import { SidebarProvider} from "@/components/ui/sidebar"
+import { SidebarInset, SidebarProvider} from "@/components/ui/sidebar"
 import { AppSidebar, SidebarTrigger} from "@/components/sidebar/app-sidebar"
+import { TableDemo } from "./table"
 
 export default function Home() {
   return (
     <div>
       <SidebarProvider>
         <AppSidebar />
-        <SidebarTrigger></SidebarTrigger>
+        <SidebarInset>
+          <SidebarTrigger />
+          <TableDemo />
+        </SidebarInset>
       </SidebarProvider>
     </div>
   )
