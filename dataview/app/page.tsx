@@ -9,8 +9,14 @@ export default function Home() {
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
-          <SidebarTrigger />
-          <TableDemo />
+          <header>
+            <SidebarTrigger />
+            <div>This is the top bar!</div>
+          </header>
+          <div>
+            <TableDemo />
+            <p>This is the main content</p>
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </div>
