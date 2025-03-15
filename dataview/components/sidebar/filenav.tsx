@@ -136,7 +136,6 @@ function FolderTree(
 }
 
 function FileBrowser(){
-    const [isOpen, setIsOpen] = React.useState(true)
     const [folderHandle, setFolderHandle] = React.useState<FileSystemDirectoryHandle | null>(null);
     const [csvFiles, setCsvFiles] = React.useState<{ [key: string]: string }>({});
 
