@@ -4,10 +4,13 @@ import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, Side
 import { ChevronRight, File, Folder, FolderClosed, Search, Upload } from "lucide-react";
 import React from "react";
 import { Separator } from "@/components/ui/separator"
+import { useSelectedFile } from "./fileselect";
 
 function LoadedFiles(){
     const [isOpen, setIsOpen] = React.useState(true)
     const [csvFiles, setCsvFiles] = React.useState<{ [key: string]: string }>({});
+    //zustand
+    const { file,set } = useSelectedFile()
 
     // Load CSV files from localStorage on mount
     React.useEffect(() => {
@@ -29,6 +32,11 @@ function LoadedFiles(){
             
     }, []);
     
+    function clickHandler(file_key:string){
+        set(file_key)
+        console.log(file_key)
+    }
+    
     return ( 
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="group/collapsible group-data-[collapsible=icon]:hidden">
         <CollapsibleTrigger asChild>
@@ -46,7 +54,7 @@ function LoadedFiles(){
                 {
                     Object.entries(csvFiles).map(([key,value]) => {
                         return (
-                            <SidebarMenuSubButton key={key}>
+                            <SidebarMenuSubButton className={key===file ? "border-4 border-solid" : ""} key={key} onClick={()=>clickHandler(key)}>
                                 <File />
                                 <span>{key}</span>
                             </SidebarMenuSubButton>
