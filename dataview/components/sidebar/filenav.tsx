@@ -126,7 +126,7 @@ function FolderTree(
                         );
                     } else if (entry.kind === 'directory') {
                         // Recursively render child folders
-                        return <FolderTree folder={entry} key={entry.name} className={ "group/collapsible group-data-[collapsible=icon]:hidden" }/>
+                        return <FolderTree folder={entry} key={entry.name} addCSVFile={addCSVFile} className={ "group/collapsible group-data-[collapsible=icon]:hidden" }/>
                     }
                     return null;
                 })}
