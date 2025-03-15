@@ -9,7 +9,7 @@ export default function Home() {
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
-          <header>
+          <header className="flex">
             <SidebarTrigger />
             <div>This is the top bar!</div>
           </header>
