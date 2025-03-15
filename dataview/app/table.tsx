@@ -20,8 +20,8 @@ export function Test() {
     React.useEffect(() => {
         const stored = sessionStorage.getItem('csvFiles')
         if (stored) {
-            const obj: { [key: string]: string } = JSON.parse(stored)
-            setContent(obj[file])
+            const obj: { [key: string]: { name: string, content: string } } = JSON.parse(stored)
+            setContent(obj[file].content)
         }
     })
 
