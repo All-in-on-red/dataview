@@ -1,7 +1,7 @@
 // side bar
 import { SidebarInset, SidebarProvider} from "@/components/ui/sidebar"
 import { AppSidebar, SidebarTrigger} from "@/components/sidebar/app-sidebar"
-import { TableDemo } from "./table"
+import { TableDemo } from "./table_sample"
 
 export default function Home() {
   return (
