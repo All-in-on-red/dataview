@@ -1,3 +1,5 @@
+"use client"
+
 import {
     Table,
     TableBody,
@@ -8,8 +10,28 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import React from "react";
+import React, { useState } from "react";
+import {useSelectedFile} from "@/components/sidebar/fileselect";
 
+export function Test() {
+    const {file,set} = useSelectedFile()
+    const [content,setContent] = useState("")
+
+    React.useEffect(() => {
+        const stored = sessionStorage.getItem('csvFiles')
+        if (stored) {
+            const obj: { [key: string]: string } = JSON.parse(stored)
+            setContent(obj[file])
+        }
+    })
+
+    return (
+        <p>
+            {file}
+            {content}
+        </p>
+    )
+}
 
 export function GenerateTable(file:String){
     const [ content,setContent ]  = React.useState("");
