@@ -15,20 +15,22 @@ import {useSelectedFile} from "@/components/sidebar/fileselect";
 
 export function Test() {
     const {file,set} = useSelectedFile()
-    const [content,setContent] = useState("")
+    const [Filecontent,setFileContent] = useState("")
 
     React.useEffect(() => {
         const stored = sessionStorage.getItem('csvFiles')
         if (stored) {
             const obj: { [key: string]: { name: string, content: string } } = JSON.parse(stored)
-            setContent(obj[file].content)
+            if (file !== "") {
+                setFileContent(obj[file].content)
+            }
         }
     })
 
     return (
         <p>
             {file}
-            {content}
+            {Filecontent}
         </p>
     )
 }
