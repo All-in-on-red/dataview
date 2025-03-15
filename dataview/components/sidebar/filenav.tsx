@@ -126,7 +126,7 @@ function FolderTree(
                         );
                     } else if (entry.kind === 'directory') {
                         // Recursively render child folders
-                        return <FolderTree folder={entry} key={entry.name} className={ "group/collapsible group-data-[collapsible=icon]:hidden" }/>
+                        return <FolderTree folder={entry} key={entry.name} addCSVFile={addCSVFile} className={ "group/collapsible group-data-[collapsible=icon]:hidden" }/>
                     }
                     return null;
                 })}
@@ -136,7 +136,6 @@ function FolderTree(
 }
 
 function FileBrowser(){
-    const [isOpen, setIsOpen] = React.useState(true)
     const [folderHandle, setFolderHandle] = React.useState<FileSystemDirectoryHandle | null>(null);
     const [csvFiles, setCsvFiles] = React.useState<{ [key: string]: string }>({});
 
