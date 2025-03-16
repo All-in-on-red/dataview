@@ -35,6 +35,7 @@ export const PyodideProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+//subscribes to the context to access the top level provider
 export const usePyodide = (): PyodideContextProps => {
   const context = useContext(PyodideContext);
   if (context === undefined) {
