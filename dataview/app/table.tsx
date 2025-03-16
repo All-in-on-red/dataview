@@ -16,7 +16,6 @@ import { usePyodide } from "@/components/pyodide/provider";
 
 export function GenerateTable(){
     const {file,set} = useSelectedFile()
-    const [Filecontent,setFileContent] = useState("")
     const [json,setJson] = useState()
     const { pyodide, runPython } = usePyodide();
 
@@ -43,9 +42,7 @@ def result():
                 `.replace("#replace_here#",obj[file].content))
 
                 let r = runPython("result()")
-                console.log(r)
                 const json = JSON.parse(r)
-                console.log(json)
                 // setFileContent(r)
                 setJson(json)
             }
