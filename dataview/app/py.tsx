@@ -1,30 +1,38 @@
-import { loadPyodide, PyodideInterface } from "pyodide";
-import { useEffect } from "react";
+import React, { useEffect } from 'react';
+import { usePyodide } from '@/components/pyodide/provider';
+import { Button } from '@/components/ui/button';
 
+const PyodideComponent = () => {
+  const { pyodide, runPython } = usePyodide();
 
-const PyodideComponent_test = () => {
-    
-    useEffect(()=>{
-        async function setup() {
-            const pyodide  = await loadPyodide({ indexURL: `${window.location.origin}/pyodide` }); 
-            const define_func = async () => {
-                pyodide.runPython(`
-                def greet():
-                    return "Hello world"
-                `)
-            }
-            define_func()
-            async function main() {
-                console.log(pyodide.runPython("greet()"))
-            }
-            main()
-            main()
-        }
-        setup()
-    })
-    return (
-        <div> a </div>
-    )
+  useEffect(() => {
+    if (pyodide) {
+      // Example: Get Python version
+      const version = runPython(`
+import sys
+sys.version
+def greet():
+    return "Hello from python"
+      `);
+      console.log('Python version:', version);
+    }
+  }, [pyodide, runPython]);
+
+  return (
+    <div>
+    Pyodide should be here
+      {pyodide ? (
+        <>
+          <p>Pyodide is loaded!</p>
+          <Button onClick={() => console.log(runPython('greet()'))}>
+            Run Python Code
+          </Button>
+        </>
+      ) : (
+        <p>Loading Pyodide...</p>
+      )}
+    </div>
+  );
 };
 
-export default PyodideComponent_test;
+export default PyodideComponent;
