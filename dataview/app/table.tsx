@@ -63,9 +63,18 @@ def result():
                 </TableRow>
             </TableHeader>
             <TableBody>
-
+                    {json && (
+                        Object.keys(json).map((key)=>(
+                            <TableRow key={key}>
+                                {
+                                    Object.keys(json[key]).map((json_entry)=>(
+                                        <TableCell>{json[key][json_entry]}</TableCell>
+                                    ))
+                                }
+                            </TableRow>
+                        ))
+                    )}
             </TableBody>
-
         </Table>
     )
 }
