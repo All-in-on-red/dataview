@@ -1,11 +1,17 @@
+"use client"
 // side bar
 import { SidebarInset, SidebarProvider} from "@/components/ui/sidebar"
 import { AppSidebar, SidebarTrigger} from "@/components/sidebar/app-sidebar"
 import { TableDemo } from "./table_sample"
 import { Test } from "./table"
 
+import PyodideComponent_test from "./py"
+import { PyodideProvider } from "@/components/pyodide/provider"
+import PyodideComponent from "@/components/pyodide/component"
+
 export default function Home() {
   return (
+    <PyodideProvider>
     <div>
       <SidebarProvider>
         <AppSidebar />
@@ -18,9 +24,12 @@ export default function Home() {
             <TableDemo />
             <p>This is the main content</p>
             <Test/>
+            <PyodideComponent_test/>
+            <PyodideComponent/>
           </div>
         </SidebarInset>
       </SidebarProvider>
     </div>
+    </PyodideProvider>
   )
 }
