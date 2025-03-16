@@ -8,13 +8,13 @@ const PyodideComponent = () => {
   useEffect(() => {
     if (pyodide) {
       // Example: Get Python version
-      const version = runPython(`
-import sys
-sys.version
+      runPython(`
+import pandas
+import json
+import numpy as np
 def greet():
-    return "Hello from python"
+    return np.random.random_sample()
       `);
-      console.log('Python version:', version);
     }
   }, [pyodide, runPython]);
 

@@ -14,7 +14,11 @@ export const PyodideProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const initPyodide = async () => {
       const py = await loadPyodide({ indexURL: `${window.location.origin}/pyodide` });
-      setPyodide(py);
+      await py.loadPackage("micropip");
+      const micropip = py.pyimport("micropip");
+      await micropip.install('numpy');
+      await micropip.install('pandas');
+      setPyodide(py)
     };
 
     // Load Pyodide only once when the provider mounts
