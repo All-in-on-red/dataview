@@ -38,7 +38,7 @@ if ";" in file:
 
 df = pd.read_csv(TESTDATA, sep=sep)
 def result():
-    return df.head().to_json(orient='records')
+    return df.to_json(orient='records')
                 `.replace("#replace_here#",obj[file].content))
 
                 let r = runPython("result()")
