@@ -7,7 +7,6 @@ import { Test } from "./table"
 
 import PyodideComponent_test from "./py"
 import { PyodideProvider } from "@/components/pyodide/provider"
-import PyodideComponent from "@/components/pyodide/component"
 
 export default function Home() {
   return (
@@ -25,7 +24,6 @@ export default function Home() {
             <p>This is the main content</p>
             <Test/>
             <PyodideComponent_test/>
-            <PyodideComponent/>
           </div>
         </SidebarInset>
       </SidebarProvider>
