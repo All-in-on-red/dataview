@@ -2,7 +2,6 @@
 // side bar
 import { SidebarInset, SidebarProvider} from "@/components/ui/sidebar"
 import { AppSidebar, SidebarTrigger} from "@/components/sidebar/app-sidebar"
-import { TableDemo } from "./table_sample"
 import { GenerateTable } from "./table"
 
 import PyodideComponent_test from "./py"
@@ -20,8 +19,6 @@ export default function Home() {
             <div>This is the top bar!</div>
           </header>
           <div>
-            <TableDemo />
-            <p>This is the main content</p>
             <PyodideComponent_test/>
             <GenerateTable/>
           </div>
