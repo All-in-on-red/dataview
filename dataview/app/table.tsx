@@ -88,27 +88,22 @@ export function DataTables() {
     function GenTable(key:any) {
         const json = JsonStore[key]
         const prop = PropStore[key]
-        return ( <Table key={key}>
-            <TableHeader>
-                <TableRow>
-                    {json && (
-                        Object.keys(json[0]).map((key)=>(
-                            <TableHead key={key}>{key}</TableHead>
-                        ))
-                    )}
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {prop}
-            </TableBody>
-        </Table> )
+        return ( 
+            <Table key={key} className={key === file ? "" : "hidden" }>
+                <TableHeader>
+                    <TableRow>
+                        {json && (
+                            Object.keys(json[0]).map((key) => (
+                                <TableHead key={key}>{key}</TableHead>
+                            ))
+                        )}
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {prop}
+                </TableBody>
+            </Table>)
     }
     
-    return (
-        <div>
-            {
-                Object.keys(JsonStore).map((key)=> GenTable(key))
-            }
-        </div>
-    )
+    return ( Object.keys(JsonStore).map((key)=> GenTable(key)))
 }
