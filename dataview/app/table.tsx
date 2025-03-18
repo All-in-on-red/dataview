@@ -52,7 +52,7 @@ export function DataTables() {
         }
     },[file])
 
-    const batchSize = 5;
+    const batchSize = 1000;
     
     useEffect(() => {
         if (file && JsonStore[file]) {
